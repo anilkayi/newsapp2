@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newsapp2/UI/signIn_page.dart';
+import 'package:newsapp2/UI/logIn_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SignIn(),
+      home: Login(),
     );
   }
 }
