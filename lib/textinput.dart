@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'style.dart';
 
 class TextInput extends StatelessWidget {
@@ -26,7 +25,7 @@ class TextInput extends StatelessWidget {
               color: renk, borderRadius: BorderRadius.circular(16)),
           child: TextField(
             onChanged: (usermail) {
-              usermail = email!;
+              email = usermail;
             },
             style: buildTextStyle(20, Colors.white, FontWeight.bold),
             controller: user,

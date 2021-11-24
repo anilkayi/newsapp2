@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:newsapp2/models/NewsModels.dart';
 import 'package:newsapp2/passinput.dart';
+import 'package:newsapp2/services/api_services.dart';
+import 'package:newsapp2/services/login_services.dart';
 import 'package:newsapp2/style.dart';
 import 'package:newsapp2/textinput.dart';
 
 import 'signIn_page.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  String email;
+  String password;
+
+  Login(this.email, this.password);
 
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController k1 = TextEditingController();
-  TextEditingController k2 = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  LoginInClass login = LoginInClass();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,7 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextInput(
-                    user: k1,
+                    user: email,
                     icon: Icons.email,
                     hint: 'Email',
                     renk: Colors.black.withOpacity(0.5)),
@@ -44,12 +52,21 @@ class _LoginState extends State<Login> {
                   height: 10,
                 ),
                 PassInput(
-                    pass: k2,
+                    pass: password,
                     hint: 'Password',
                     icon: Icons.password,
                     renk: Colors.black.withOpacity(0.5)),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (widget.email == email.text &&
+                        widget.password == password.text) {
+                      login.LoginIn(email.text, password.text, context);
+                    }
+                    {
+                      Fluttertoast.showToast(
+                          msg: 'Email or Password is incorrect');
+                    }
+                  },
                   child: Text('LogIn'),
                   style: ElevatedButton.styleFrom(primary: Colors.black),
                 ),

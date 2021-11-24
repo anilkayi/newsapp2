@@ -30,17 +30,10 @@ class _PassInputState extends State<PassInput> {
 
   @override
   Widget build(BuildContext context) {
-    String? password;
     return Container(
       decoration: BoxDecoration(
           color: widget.renk, borderRadius: BorderRadius.circular(16)),
       child: TextField(
-        onChanged: (userpass) {
-          userpass = password!;
-        },
-        onTap: () {
-          if (password!.length > 6) {}
-        },
         obscureText: showpw,
         style: buildTextStyle(15, Colors.white, FontWeight.bold),
         controller: widget.pass,
