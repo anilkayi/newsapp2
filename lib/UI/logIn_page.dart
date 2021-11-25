@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:newsapp2/models/NewsModels.dart';
 import 'package:newsapp2/passinput.dart';
-import 'package:newsapp2/services/api_services.dart';
+import 'package:newsapp2/services/news_services/news_bloc.dart';
 import 'package:newsapp2/services/login_services.dart';
 import 'package:newsapp2/style.dart';
 import 'package:newsapp2/textinput.dart';
@@ -58,10 +58,8 @@ class _LoginState extends State<Login> {
                     renk: Colors.black.withOpacity(0.5)),
                 ElevatedButton(
                   onPressed: () {
-                    if (widget.email == email.text &&
-                        widget.password == password.text) {
-                      login.LoginIn(email.text, password.text, context);
-                    }
+                    login.LoginIn(email.text, password.text, context);
+
                     {
                       Fluttertoast.showToast(
                           msg: 'Email or Password is incorrect');
