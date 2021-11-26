@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:newsapp2/models/NewsModels.dart';
 import 'package:newsapp2/passinput.dart';
-import 'package:newsapp2/services/news_services/news_bloc.dart';
+
 import 'package:newsapp2/services/login_services.dart';
 import 'package:newsapp2/style.dart';
 import 'package:newsapp2/textinput.dart';
