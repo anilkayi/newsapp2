@@ -12,7 +12,7 @@ class LoginInClass {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     }).catchError((error) {
       Fluttertoast.showToast(msg: error);

@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:newsapp2/passinput.dart';
 import 'package:newsapp2/services/signIn_services.dart';
-
+import 'package:newsapp2/generated/l10n.dart';
 import 'package:newsapp2/textinput.dart';
 
 class SignIn extends StatefulWidget {
@@ -71,7 +71,7 @@ class _SignInState extends State<SignIn> {
                                     'You have entered an erg error mailing address');
                           }
                         },
-                        child: Text('Sign Up'))
+                        child: Text(S.of(context).buttonTextSign))
                   ],
                 ),
               )),

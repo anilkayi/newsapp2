@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:newsapp2/models/NewsModels.dart';
 import 'package:newsapp2/passinput.dart';
-
 import 'package:newsapp2/services/login_services.dart';
 import 'package:newsapp2/style.dart';
 import 'package:newsapp2/textinput.dart';
-
 import 'signIn_page.dart';
+import 'package:newsapp2/generated/l10n.dart';
 
 class Login extends StatefulWidget {
   String email;
@@ -43,6 +41,7 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(''),
                 TextInput(
                     user: email,
                     icon: Icons.email,
@@ -59,13 +58,17 @@ class _LoginState extends State<Login> {
                 ElevatedButton(
                   onPressed: () {
                     login.LoginIn(email.text, password.text, context);
+                    email.clear();
+                    password.clear();
 
                     {
                       Fluttertoast.showToast(
                           msg: 'Email or Password is incorrect');
                     }
                   },
-                  child: Text('LogIn'),
+                  child: Text(
+                    S.of(context).buttonTextLogin,
+                  ),
                   style: ElevatedButton.styleFrom(primary: Colors.black),
                 ),
                 Row(

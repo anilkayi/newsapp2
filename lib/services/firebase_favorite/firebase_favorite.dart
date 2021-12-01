@@ -1,13 +1,17 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:collection';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:newsapp2/models/NewsModels.dart';
 
 class FavoriteClass {
-  Future<void> AddFavorite(Favorite) async {
-    FirebaseFirestore.instance
-        .collection('Favorite')
-        .add(Favorite)
-        .catchError((error) {
-      Fluttertoast.showToast(msg: 'Error');
-    });
+  var refFavorite = FirebaseDatabase.instance.reference().child('Favorite');
+
+  Future<void> AddFavorite(String urltoImage, String title, String source,
+      String description) async {
+    var data = HashMap<String, dynamic>();
+    data["urltoImage"] = urltoImage;
+    data['title'] = title;
+    data['source'] = source;
+    data['description'] = description;
+    refFavorite.push().set(data);
   }
 }

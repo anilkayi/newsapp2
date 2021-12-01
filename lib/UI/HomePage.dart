@@ -1,12 +1,15 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:newsapp2/UI/UserPage.dart';
 import 'package:newsapp2/UI/logIn_page.dart';
-import 'package:newsapp2/UI/signIn_page.dart';
+import 'package:newsapp2/UI/settings/settings.dart';
 import 'package:newsapp2/models/NewsModels.dart';
+import 'package:newsapp2/services/firebase_favorite/firebase_favorite.dart';
 import 'package:newsapp2/services/news_bloc/news_bloc.dart';
 import 'package:newsapp2/services/news_bloc/news_event.dart';
-
+import 'package:newsapp2/generated/l10n.dart';
 import 'package:newsapp2/services/news_bloc/news_state.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -19,6 +22,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   NewsBloc? bloc;
+  FavoriteClass addFav = FavoriteClass();
+  var refFavorite = FirebaseDatabase.instance.reference().child('Favorite');
   @override
   void initState() {
     bloc = BlocProvider.of<NewsBloc>(context);
@@ -45,9 +50,12 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.green,
               ),
             ),
-            buildListTile('HomePage', Icons.home, HomePage()),
-            buildListTile('My Profile', Icons.person, Login('', '')),
-            buildListTile('Exit', Icons.exit_to_app, SignIn())
+            buildListTile(S.of(context).homepageTitle, Icons.home, HomePage()),
+            buildListTile(S.of(context).profileTitle, Icons.person, UserPage()),
+            buildListTile(
+                S.of(context).settingTitle, Icons.settings, Settings()),
+            buildListTile(
+                S.of(context).LogoutTitle, Icons.exit_to_app, Login('', '')),
           ],
         ),
       ),
@@ -60,7 +68,7 @@ class _HomePageState extends State<HomePage> {
               );
             } else if (state is NewsLoadedState) {
               List<Article> _articleList;
-              _articleList = state.articleList as List<Article>;
+              _articleList = state.articleList;
               return ListView.builder(
                   itemBuilder: (context, indeks) {
                     initializeDateFormatting('tr');
@@ -77,7 +85,19 @@ class _HomePageState extends State<HomePage> {
                           subtitle: Text(
                               _articleList[indeks].source!.name.toString()),
                           trailing: IconButton(
-                              onPressed: () {}, icon: Icon(Icons.favorite)),
+                              onPressed: () async {
+                                addFav.AddFavorite(
+                                    _articleList[indeks].urlToImage.toString(),
+                                    _articleList[indeks].title.toString(),
+                                    _articleList[indeks]
+                                        .source!
+                                        .name
+                                        .toString(),
+                                    _articleList[indeks]
+                                        .description
+                                        .toString());
+                              },
+                              icon: Icon(Icons.favorite)),
                           children: [
                             ListTile(
                               title: Text(
