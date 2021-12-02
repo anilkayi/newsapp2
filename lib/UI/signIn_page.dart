@@ -67,8 +67,7 @@ class _SignInState extends State<SignIn> {
                           }
                           {
                             Fluttertoast.showToast(
-                                msg:
-                                    'You have entered an erg error mailing address');
+                                msg: 'You entered an invalid email');
                           }
                         },
                         child: Text(S.of(context).buttonTextSign))

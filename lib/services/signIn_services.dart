@@ -13,8 +13,7 @@ class signInClass {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => Login(email, password)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
     }).catchError((error) {
       Fluttertoast.showToast(msg: error);
     });

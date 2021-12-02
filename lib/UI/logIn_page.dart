@@ -8,11 +8,6 @@ import 'signIn_page.dart';
 import 'package:newsapp2/generated/l10n.dart';
 
 class Login extends StatefulWidget {
-  String email;
-  String password;
-
-  Login(this.email, this.password);
-
   @override
   _LoginState createState() => _LoginState();
 }
@@ -60,11 +55,6 @@ class _LoginState extends State<Login> {
                     login.LoginIn(email.text, password.text, context);
                     email.clear();
                     password.clear();
-
-                    {
-                      Fluttertoast.showToast(
-                          msg: 'Email or Password is incorrect');
-                    }
                   },
                   child: Text(
                     S.of(context).buttonTextLogin,

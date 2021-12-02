@@ -12,10 +12,10 @@ class LoginInClass {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password)
         .then((value) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => HomePage(email.toString())));
     }).catchError((error) {
-      Fluttertoast.showToast(msg: error);
+      Fluttertoast.showToast(msg: 'Email or Password is incorrect');
     });
   }
 }

@@ -4,7 +4,7 @@
   "homepageTitle": "Startseite",
   "profileTitle": "Mein Profil",
   "settingTitle": "Einstellungen",
-  "LogoutTitle": "Ausloggen",
+  "logoutTitle": "Ausloggen",
   "themaTitle": "Thema ändern",
   "languageTitle": "Sprache Auswählen"
 }

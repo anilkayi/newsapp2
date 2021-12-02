@@ -10,7 +10,9 @@ import 'package:newsapp2/generated/l10n.dart';
 Language lng = Language();
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  String user;
+
+  Settings(this.user);
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -32,7 +34,7 @@ class _SettingsState extends State<Settings> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomePage()));
+                                builder: (context) => HomePage(widget.user)));
                       });
                     },
                     child: Container(child: Text(lng.Languages[index]))),
@@ -50,8 +52,8 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => HomePage(widget.user)));
           },
           icon: Icon(Icons.arrow_back),
         ),

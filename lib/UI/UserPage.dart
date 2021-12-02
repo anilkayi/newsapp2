@@ -28,7 +28,7 @@ class _UserPageState extends State<UserPage> {
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+                context, MaterialPageRoute(builder: (context) => HomePage('')));
           },
           icon: Icon(Icons.arrow_back),
         ),
@@ -43,7 +43,7 @@ class _UserPageState extends State<UserPage> {
               var dataFavNews = event.data!.snapshot.value;
               if (dataFavNews != null) {
                 dataFavNews.forEach((key, value) {
-                  var newsdata = NewsFavorite.fromJson(value);
+                  var newsdata = NewsFavorite.fromJson(key, value);
                   favNewsList.add(newsdata);
                 });
               }
@@ -66,9 +66,6 @@ class _UserPageState extends State<UserPage> {
                         },
                         placeholder: AssetImage('assets/images/no.png'),
                       ),
-                      Text(DateFormat.yMMMEd('tr_TR')
-                          .format(DateTime.now())
-                          .toString()),
                       ExpansionTile(
                         title: Text(favNewsList[indeks].title.toString()),
                         subtitle: Text(favNewsList[indeks].source!.toString()),

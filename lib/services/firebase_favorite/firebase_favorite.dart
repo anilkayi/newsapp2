@@ -8,6 +8,7 @@ class FavoriteClass {
   Future<void> AddFavorite(String urltoImage, String title, String source,
       String description) async {
     var data = HashMap<String, dynamic>();
+    data["data_id"] = '';
     data["urltoImage"] = urltoImage;
     data['title'] = title;
     data['source'] = source;

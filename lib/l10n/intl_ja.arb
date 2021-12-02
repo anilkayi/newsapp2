@@ -4,7 +4,7 @@
   "homepageTitle": "ホームページ",
   "profileTitle": "私のプロフィール",
   "settingTitle": "設定",
-  "LogoutTitle": "ログアウト",
+  "logoutTitle": "ログアウト",
   "themaTitle": "テーマの変更",
   "languageTitle": "言語を選択"
 }
