@@ -15,7 +15,8 @@ class NewsLoadingState extends NewsStates {}
 
 class NewsLoadedState extends NewsStates {
   final List<Article> articleList;
-  NewsLoadedState({required this.articleList});
+  String code;
+  NewsLoadedState({required this.articleList, required this.code});
 }
 
 class NewsErrorState extends NewsStates {

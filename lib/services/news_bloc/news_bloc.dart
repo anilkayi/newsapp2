@@ -7,17 +7,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class NewsBloc extends Bloc<NewsEvents, NewsStates> {
   NewsServices newsServices;
 
-  NewsBloc(NewsStates initialState, this.newsServices) : super(initialState) {
-    on((NewsEvents event, Emitter<NewsStates> emit) async {
+  NewsBloc(
+    NewsStates initialState,
+    this.newsServices,
+  ) : super(initialState) {
+    on((
+      NewsEvents event,
+      Emitter<NewsStates> emit,
+    ) async {
       if (event is StartEvent) {
         try {
           List<Article> _articleList;
           emit(
             NewsInitState(),
           );
-          _articleList = (await newsServices.getNews());
+          _articleList = (await newsServices.getNews(event.countryCode));
           emit(
-            NewsLoadedState(articleList: _articleList),
+            NewsLoadedState(articleList: _articleList, code: event.countryCode),
           );
         } catch (e) {
           emit(

@@ -18,12 +18,13 @@ import 'package:newsapp2/services/news_bloc/news_state.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:newsapp2/style.dart';
 
+enum PushPage { home_page, my_profile, settings_page, logout_page }
+
 class HomePage extends StatefulWidget {
+  String country;
   String user;
 
-  HomePage(
-    this.user,
-  );
+  HomePage(this.user, this.country);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -34,13 +35,14 @@ class _HomePageState extends State<HomePage> {
   FavoriteClass addFav = FavoriteClass();
   UserFavorite newsFavorite = UserFavorite();
   RemoveFavorite remove = RemoveFavorite();
-  List<bool> boolList = [false, true, false];
+  List<bool> boolList = [];
 
   var refFavorite = FirebaseDatabase.instance.reference().child('Favorite');
   @override
   void initState() {
     bloc = BlocProvider.of<NewsBloc>(context);
-    bloc!.add(StartEvent());
+    bloc!.add(StartEvent(widget.country));
+    BlocProvider.of<NewsBloc>(context).newsServices.getNews(widget.country);
     super.initState();
   }
 
@@ -77,13 +79,14 @@ class _HomePageState extends State<HomePage> {
                 ],
               )),
             ),
-            buildListTile(
-                S.of(context).homepageTitle, Icons.home, HomePage(widget.user)),
-            buildListTile(S.of(context).profileTitle, Icons.person, UserPage()),
+            buildListTile(S.of(context).homepageTitle, Icons.home,
+                HomePage(widget.user, widget.country), PushPage.home_page),
+            buildListTile(S.of(context).profileTitle, Icons.person, UserPage(),
+                PushPage.my_profile),
             buildListTile(S.of(context).settingTitle, Icons.settings,
-                Settings(widget.user)),
-            buildListTile(
-                S.of(context).logoutTitle, Icons.exit_to_app, Login()),
+                Settings(widget.user), PushPage.settings_page),
+            buildListTile(S.of(context).logoutTitle, Icons.exit_to_app, Login(),
+                PushPage.logout_page),
           ],
         ),
       ),
@@ -97,6 +100,9 @@ class _HomePageState extends State<HomePage> {
             } else if (state is NewsLoadedState) {
               List<Article> _articleList;
               _articleList = state.articleList;
+              _articleList.forEach((element) {
+                boolList.add(false);
+              });
               return ListView.builder(
                   itemBuilder: (context, indeks) {
                     initializeDateFormatting('tr');
@@ -173,13 +179,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ListTile buildListTile(String yazi, IconData icon, dynamic Sayfa) {
+  ListTile buildListTile(
+      String yazi, IconData icon, dynamic Sayfa, PushPage page) {
     return ListTile(
       title: Text(yazi),
       leading: Icon(icon),
       onTap: () {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Sayfa));
+        switch (page) {
+          case PushPage.home_page:
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Sayfa));
+            break;
+          case PushPage.my_profile:
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Sayfa));
+            break;
+          case PushPage.settings_page:
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Sayfa));
+            break;
+          case PushPage.logout_page:
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Sayfa));
+        }
       },
     );
   }

@@ -1,16 +1,13 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
 import 'package:newsapp2/models/NewsModels.dart';
-import 'package:newsapp2/generated/l10n.dart';
 
 const apikey = '456495b331014c42b9fb071ba9b26e5e';
 
 class NewsServices {
-  Future<List<Article>> getNews() async {
+  Future<List<Article>> getNews(String country) async {
     var response = await http.get(Uri.parse(
-        "https://newsapi.org/v2/top-headlines?country=tr&apiKey=$apikey"));
+        "https://newsapi.org/v2/top-headlines?country=$country&apiKey=$apikey"));
 
     var data = jsonDecode(response.body);
 

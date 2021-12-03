@@ -7,4 +7,11 @@ abstract class NewsEvents extends Equatable {
   List<Object> get props => [];
 }
 
-class StartEvent extends NewsEvents {}
+class StartEvent extends NewsEvents {
+  final String countryCode;
+
+  StartEvent(this.countryCode);
+
+  @override
+  List<Object> get props => [countryCode];
+}

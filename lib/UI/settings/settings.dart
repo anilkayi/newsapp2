@@ -30,11 +30,17 @@ class _SettingsState extends State<Settings> {
                 child: GestureDetector(
                     onTap: () {
                       setState(() {
+                        print(S.delegate.supportedLocales[index].countryCode
+                            .toString());
                         S.delegate.load(S.delegate.supportedLocales[index]);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomePage(widget.user)));
+                                builder: (context) => HomePage(
+                                    widget.user,
+                                    (S.delegate.supportedLocales[index]
+                                        .countryCode
+                                        .toString()))));
                       });
                     },
                     child: Container(child: Text(lng.Languages[index]))),
@@ -52,8 +58,7 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => HomePage(widget.user)));
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
         ),

@@ -1,7 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:newsapp2/UI/HomePage.dart';
 import 'package:newsapp2/models/NewsFavoriteModels.dart';
 import 'package:newsapp2/services/firebase_favorite/firebase_favorite_service.dart';
 import 'package:newsapp2/generated/l10n.dart';
@@ -27,8 +25,7 @@ class _UserPageState extends State<UserPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage('')));
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
         ),
