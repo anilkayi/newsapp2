@@ -3,6 +3,7 @@
 //     final newsModels = newsModelsFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 NewsModels newsModelsFromJson(String str) =>
     NewsModels.fromJson(json.decode(str));
@@ -56,6 +57,12 @@ class Article {
   DateTime? publishedAt;
   String? content;
   String? data_id;
+
+  String get hash => md5
+      .convert(utf8.encode(jsonEncode(this.source)) +
+          utf8.encode('.') +
+          utf8.encode(url!))
+      .toString();
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
       source: Source.fromJson(json["source"]),

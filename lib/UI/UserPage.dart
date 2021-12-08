@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:newsapp2/models/NewsFavoriteModels.dart';
 import 'package:newsapp2/services/firebase_favorite/firebase_favorite_service.dart';
 import 'package:newsapp2/generated/l10n.dart';
+import 'package:newsapp2/services/firebase_favorite/firebase_removefavorite_service.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   UserFavorite newsFavorite = UserFavorite();
+  RemoveFavorite removeFav = RemoveFavorite();
   @override
   void initState() {
     newsFavorite.favoriteNews();
@@ -64,6 +66,13 @@ class _UserPageState extends State<UserPage> {
                         placeholder: AssetImage('assets/images/no.png'),
                       ),
                       ExpansionTile(
+                        trailing: IconButton(
+                          onPressed: () {
+                            removeFav.removeFav(
+                                favNewsList[indeks].data_id.toString());
+                          },
+                          icon: Icon(Icons.cancel),
+                        ),
                         title: Text(favNewsList[indeks].title.toString()),
                         subtitle: Text(favNewsList[indeks].source!.toString()),
                         children: [

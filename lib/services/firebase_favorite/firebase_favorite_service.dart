@@ -7,9 +7,7 @@ class UserFavorite {
     refFavorite.once().then((DataSnapshot snapshot) {
       var favNews = snapshot.value;
       if (favNews != null) {
-        favNews.forEach((key, nesne) {
-          var userNew = NewsFavorite.fromJson(key, nesne);
-        });
+        favNews.forEach((key, nesne) {});
       }
     });
   }

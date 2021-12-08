@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:newsapp2/models/NewsModels.dart';
 
 class FavoriteClass {
   var refFavorite = FirebaseDatabase.instance.reference().child('Favorite');

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:newsapp2/UI/CommentPage.dart';
 import 'package:newsapp2/UI/UserPage.dart';
 import 'package:newsapp2/UI/logIn_page.dart';
 import 'package:newsapp2/UI/settings/settings.dart';
-import 'package:newsapp2/models/NewsFavoriteModels.dart';
 import 'package:newsapp2/models/NewsModels.dart';
+import 'package:newsapp2/services/firebase_comment/add_comment.dart';
 import 'package:newsapp2/services/firebase_favorite/firebase_favorite.dart';
-import 'package:newsapp2/services/firebase_favorite/firebase_favorite_service.dart';
 import 'package:newsapp2/services/firebase_favorite/firebase_removefavorite_service.dart';
 import 'package:newsapp2/services/news_bloc/news_bloc.dart';
 import 'package:newsapp2/services/news_bloc/news_event.dart';
@@ -33,9 +33,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   NewsBloc? bloc;
   FavoriteClass addFav = FavoriteClass();
-  UserFavorite newsFavorite = UserFavorite();
   RemoveFavorite remove = RemoveFavorite();
   List<bool> boolList = [];
+  AddComment comment = AddComment();
+  TextEditingController commentController = TextEditingController();
 
   var refFavorite = FirebaseDatabase.instance.reference().child('Favorite');
   @override
@@ -104,58 +105,82 @@ class _HomePageState extends State<HomePage> {
                 boolList.add(false);
               });
               return ListView.builder(
-                  itemBuilder: (context, indeks) {
+                  itemBuilder: (context, index) {
                     initializeDateFormatting('tr');
                     return Card(
                         child: Column(
                       children: [
                         Image.network(
-                            _articleList[indeks].urlToImage.toString()),
+                            _articleList[index].urlToImage.toString()),
                         Text(DateFormat.yMMMEd('tr_TR')
                             .format(DateTime.now())
                             .toString()),
                         ExpansionTile(
-                          title: Text(_articleList[indeks].title.toString()),
-                          subtitle: Text(
-                              _articleList[indeks].source!.name.toString()),
-                          trailing: boolList[indeks]
+                          title: Text(_articleList[index].title.toString()),
+                          subtitle:
+                              Text(_articleList[index].source!.name.toString()),
+                          trailing: boolList[index]
                               ? IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      boolList[indeks] = false;
-                                      print('tıklandi,false');
-                                    });
-                                    remove.removeFav(_articleList[indeks]
-                                        .data_id
-                                        .toString());
-                                  },
-                                  icon: Icon(Icons.cancel))
-                              : IconButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      boolList[indeks] = true;
-                                      print('tıklandi');
-                                    });
-                                    addFav.AddFavorite(
-                                        _articleList[indeks]
-                                            .urlToImage
-                                            .toString(),
-                                        _articleList[indeks].title.toString(),
-                                        _articleList[indeks]
-                                            .source!
-                                            .name
-                                            .toString(),
-                                        _articleList[indeks]
-                                            .description
-                                            .toString());
+                                    if (boolList[index] == true) {
+                                      Fluttertoast.showToast(
+                                          msg: 'Zaten favoriye eklendi');
+                                    }
                                   },
                                   icon: Icon(
                                     Icons.favorite,
+                                    color: Colors.red,
+                                  ))
+                              : IconButton(
+                                  onPressed: () async {
+                                    if (boolList[index] == true) {
+                                      Fluttertoast.showToast(
+                                          msg: 'Zaten favoriye eklendi');
+                                    } else {
+                                      setState(() {
+                                        boolList[index] = true;
+                                      });
+                                      addFav.AddFavorite(
+                                        _articleList[index]
+                                            .urlToImage
+                                            .toString(),
+                                        _articleList[index].title.toString(),
+                                        _articleList[index]
+                                            .source!
+                                            .name
+                                            .toString(),
+                                        _articleList[index]
+                                            .description
+                                            .toString(),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: Colors.grey,
                                   )),
                           children: [
                             ListTile(
-                              title: Text(
-                                  _articleList[indeks].description.toString()),
+                              title: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CommentPage(
+                                              _articleList[index]
+                                                  .url
+                                                  .toString(),
+                                              widget.user,
+                                              _articleList[index]
+                                                  .urlToImage
+                                                  .toString(),
+                                              _articleList[index]
+                                                  .title
+                                                  .toString())));
+                                },
+                                child: Text(
+                                    'Detayları görmek ve yorum yapmak için tıklayınız...'),
+                              ),
                             )
                           ],
                         ),
