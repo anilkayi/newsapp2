@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -6,8 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:newsapp2/UI/CommentPage.dart';
 import 'package:newsapp2/UI/UserPage.dart';
 import 'package:newsapp2/UI/logIn_page.dart';
+import 'package:newsapp2/UI/message/messaging_widget.dart';
 import 'package:newsapp2/UI/settings/settings.dart';
 import 'package:newsapp2/models/NewsModels.dart';
+import 'package:newsapp2/models/messagemodels.dart';
 import 'package:newsapp2/services/firebase_comment/add_comment.dart';
 import 'package:newsapp2/services/firebase_favorite/firebase_favorite.dart';
 import 'package:newsapp2/services/firebase_favorite/firebase_removefavorite_service.dart';
@@ -17,6 +20,17 @@ import 'package:newsapp2/generated/l10n.dart';
 import 'package:newsapp2/services/news_bloc/news_state.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:newsapp2/style.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert'; //
+
+void main() {
+  var bytes = utf8.encode("foobar"); // data being hashed
+
+  var digest = sha1.convert(bytes);
+
+  print("Digest as bytes: ${digest.bytes}");
+  print("Digest as hex string: $digest");
+}
 
 enum PushPage { home_page, my_profile, settings_page, logout_page }
 
@@ -37,6 +51,9 @@ class _HomePageState extends State<HomePage> {
   List<bool> boolList = [];
   AddComment comment = AddComment();
   TextEditingController commentController = TextEditingController();
+  NotificationMessage ntf = NotificationMessage();
+  RemoveFavorite removeFav = RemoveFavorite();
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
   var refFavorite = FirebaseDatabase.instance.reference().child('Favorite');
   @override
@@ -44,12 +61,14 @@ class _HomePageState extends State<HomePage> {
     bloc = BlocProvider.of<NewsBloc>(context);
     bloc!.add(StartEvent(widget.country));
     BlocProvider.of<NewsBloc>(context).newsServices.getNews(widget.country);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('News'),
         centerTitle: true,
@@ -75,7 +94,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text(
                     'Email: ${widget.user}',
-                    style: TextStyle(fontSize: 15),
                   ),
                 ],
               )),
@@ -110,8 +128,20 @@ class _HomePageState extends State<HomePage> {
                     return Card(
                         child: Column(
                       children: [
-                        Image.network(
-                            _articleList[index].urlToImage.toString()),
+                        FadeInImage(
+                          image: NetworkImage(
+                              _articleList[index].urlToImage.toString()),
+                          imageErrorBuilder: (ctx, exception, stackTrace) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              child: Image.asset(
+                                'assets/images/no.png',
+                              ),
+                            );
+                          },
+                          placeholder: AssetImage('assets/images/no.png'),
+                        ),
                         Text(DateFormat.yMMMEd('tr_TR')
                             .format(DateTime.now())
                             .toString()),
@@ -137,22 +167,26 @@ class _HomePageState extends State<HomePage> {
                                       Fluttertoast.showToast(
                                           msg: 'Zaten favoriye eklendi');
                                     } else {
+                                      var bytes = utf8.encode(
+                                          _articleList[index].url.toString());
+                                      var sha = sha1.convert(bytes);
+                                      sha1.convert(bytes);
                                       setState(() {
                                         boolList[index] = true;
                                       });
                                       addFav.AddFavorite(
-                                        _articleList[index]
-                                            .urlToImage
-                                            .toString(),
-                                        _articleList[index].title.toString(),
-                                        _articleList[index]
-                                            .source!
-                                            .name
-                                            .toString(),
-                                        _articleList[index]
-                                            .description
-                                            .toString(),
-                                      );
+                                          _articleList[index]
+                                              .urlToImage
+                                              .toString(),
+                                          _articleList[index].title.toString(),
+                                          _articleList[index]
+                                              .source!
+                                              .name
+                                              .toString(),
+                                          _articleList[index]
+                                              .description
+                                              .toString(),
+                                          sha.toString());
                                     }
                                   },
                                   icon: Icon(
@@ -163,13 +197,15 @@ class _HomePageState extends State<HomePage> {
                             ListTile(
                               title: TextButton(
                                 onPressed: () {
+                                  var bytes = utf8.encode(
+                                      _articleList[index].url.toString());
+                                  var sha = sha1.convert(bytes);
+                                  sha1.convert(bytes);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => CommentPage(
-                                              _articleList[index]
-                                                  .url
-                                                  .toString(),
+                                              sha.toString(),
                                               widget.user,
                                               _articleList[index]
                                                   .urlToImage
@@ -214,18 +250,23 @@ class _HomePageState extends State<HomePage> {
           case PushPage.home_page:
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => Sayfa));
+            scaffoldKey.currentState!.openEndDrawer();
+
             break;
           case PushPage.my_profile:
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Sayfa));
+            scaffoldKey.currentState!.openEndDrawer();
             break;
           case PushPage.settings_page:
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Sayfa));
+            scaffoldKey.currentState!.openEndDrawer();
             break;
           case PushPage.logout_page:
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => Sayfa));
+            scaffoldKey.currentState!.openEndDrawer();
         }
       },
     );

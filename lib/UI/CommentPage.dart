@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -6,15 +8,7 @@ import 'package:newsapp2/services/firebase_comment/comment_models.dart';
 import 'package:newsapp2/services/firebase_comment/firebase_comment.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert'; //
-
-void main() {
-  var bytes = utf8.encode("foobar"); // data being hashed
-
-  var digest = sha1.convert(bytes);
-
-  print("Digest as bytes: ${digest.bytes}");
-  print("Digest as hex string: $digest");
-}
+import 'package:share/share.dart';
 
 class CommentPage extends StatefulWidget {
   String urltoImage;
@@ -33,41 +27,87 @@ class _CommentPageState extends State<CommentPage> {
   TextEditingController commentController = TextEditingController();
   var refComment = FirebaseDatabase.instance.reference().child('Comment');
 
-
-
-
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                Share.share(widget.url);
+              },
+              icon: Icon(Icons.share)),
+        ],
+      ),
       body: SafeArea(
           child: Container(
               child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.network(widget.urltoImage),
+          FadeInImage(
+            image: NetworkImage(widget.urltoImage),
+            imageErrorBuilder: (ctx, exception, stackTrace) {
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: Image.asset(
+                  'assets/images/no.png',
+                ),
+              );
+            },
+            placeholder: AssetImage('assets/images/no.png'),
+          ),
           Text(widget.title),
-          StreamBuilder<Event>(stream: refComment.onValue
-              ,builder: (context,event){
-            if(event.hasData){
-              var commentList = <UserComment>[];
-              var getData = event.data!.snapshot.value;
-if(getData != null){
-  getData.forEach((key,value){
-    var userCommentData = UserComment.fromJson(key, value);
-    commentList.add(userCommentData);
-  });
-  return ListView.builder(itemCount: commentList.length,itemBuilder: (context,indx){
-    return Card(
+          StreamBuilder<Event>(
+              stream: refComment.onValue,
+              builder: (context, event) {
+                if (event.hasData) {
+                  var commentList = <UserComment>[];
+                  var getData = event.data!.snapshot.value;
+                  if (getData != null) {
+                    getData.forEach((key, value) {
+                      var userCommentData = UserComment.fromJson(value);
+                      commentList.add(userCommentData);
+                    });
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: commentList.length,
+                          itemBuilder: (context, indx) {
+                            return widget.title == commentList[indx].title
+                                ? Card(
+                                    child: Column(
+                                      children: [
+                                        Text(commentList[indx].created_at),
 
-    );
-  });
-}
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 15,
+                                              child: Text(commentList[indx]
+                                                  .user_name[0]
+                                                  .toUpperCase()),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(commentList[indx].user_name),
+                                          ],
+                                        ),
+                                        //
 
-            }
-              })
+                                        Text(commentList[indx].comment)
+                                      ],
+                                    ),
+                                  )
+                                : Center();
+                          }),
+                    );
+                  }
+                }
+                return Center();
+              }),
           TextField(
             controller: commentController,
             decoration: InputDecoration(
@@ -83,7 +123,8 @@ if(getData != null){
                         widget.user_name,
                         commentController.text,
                         widget.title,
-                        widget.urltoImage);
+                        DateTime.now().toString());
+                    commentController.clear();
                   },
                   child: Icon(
                     Icons.send,

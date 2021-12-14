@@ -1,0 +1,10 @@
+{
+    "buttonTextLogin": "Login",
+  "buttonTextSign": "Sign In",
+  "homepageTitle": "HomePage",
+  "profileTitle": "My Profile",
+  "settingTitle": "Settings",
+  "logoutTitle": "Log out",
+  "themaTitle": "Switch Theme",
+  "languageTitle": "Change Language"
+}

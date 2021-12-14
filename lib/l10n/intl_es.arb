@@ -1,0 +1,10 @@
+{
+    "buttonTextLogin": "Iniciar sesión",
+  "buttonTextSign": "Registrarse",
+  "homepageTitle": "Pagina de inicio",
+  "profileTitle": "Mi perfil",
+  "settingTitle": "Ajustes",
+  "logoutTitle": "Cerrar sesión",
+  "themaTitle": "Cambiar de tema",
+  "languageTitle": "Selección de idioma"
+}

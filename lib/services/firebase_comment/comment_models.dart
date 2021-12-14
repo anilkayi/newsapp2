@@ -5,21 +5,21 @@ class UserComment {
   String user_name;
   String comment;
   String title;
-  String urlToImage;
+  String created_at;
 
   UserComment(
       {required this.comment_id,
       required this.user_name,
       required this.comment,
       required this.title,
-      required this.urlToImage});
+      required this.created_at});
 
-  factory UserComment.fromJson(String key, Map<dynamic, dynamic> json) {
+  factory UserComment.fromJson(Map<dynamic, dynamic> json) {
     return UserComment(
-        comment_id: key,
+        comment_id: json["comment_id"],
         user_name: json["user_name"],
         comment: json["comment"],
         title: json["title"],
-        urlToImage: json["urlToImage"]);
+        created_at: json["created_at"]);
   }
 }

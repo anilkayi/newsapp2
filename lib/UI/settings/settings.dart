@@ -30,8 +30,6 @@ class _SettingsState extends State<Settings> {
                 child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        print(S.delegate.supportedLocales[index].countryCode
-                            .toString());
                         S.delegate.load(S.delegate.supportedLocales[index]);
                         Navigator.pushReplacement(
                             context,
@@ -51,6 +49,10 @@ class _SettingsState extends State<Settings> {
         });
   }
 
+  int max = 15;
+  int min = 10;
+  AppTheme themeData = AppTheme();
+  double value = 15;
   bool isThemeSwitch = false;
   @override
   Widget build(BuildContext context) {
@@ -97,8 +99,35 @@ class _SettingsState extends State<Settings> {
                       showModelBottom(context);
                     },
                     child: Container(
-                      child: Text(S.of(context).languageTitle),
+                      child: Text(
+                        S.of(context).languageTitle,
+                      ),
                     ),
+                  ),
+                  Row(
+                    children: [
+                      buildSideLabe(min.toDouble()),
+                      Expanded(
+                        child: Slider(
+                            divisions: 5,
+                            label: value.round().toString(),
+                            value: value,
+                            onChanged: (double s) {
+                              setState(() {
+                                value = s;
+                              });
+                              BlocProvider.of<ThemeBloc>(context).add(
+                                  ThemeEvent(
+                                      theme: themeData.fontTheme(
+                                          MediaQuery.of(context).size.width *
+                                              0.0035 *
+                                              value)));
+                            },
+                            max: max.toDouble(),
+                            min: min.toDouble()),
+                      ),
+                      buildSideLabe(max.toDouble())
+                    ],
                   )
                 ],
               ),
@@ -107,5 +136,11 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
+  }
+
+  Widget buildSideLabe(double value) {
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.05,
+        child: Text(value.round().toString()));
   }
 }
