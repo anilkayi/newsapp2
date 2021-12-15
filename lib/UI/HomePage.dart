@@ -197,15 +197,13 @@ class _HomePageState extends State<HomePage> {
                             ListTile(
                               title: TextButton(
                                 onPressed: () {
-                                  var bytes = utf8.encode(
-                                      _articleList[index].url.toString());
-                                  var sha = sha1.convert(bytes);
-                                  sha1.convert(bytes);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => CommentPage(
-                                              sha.toString(),
+                                              _articleList[index]
+                                                  .url
+                                                  .toString(),
                                               widget.user,
                                               _articleList[index]
                                                   .urlToImage

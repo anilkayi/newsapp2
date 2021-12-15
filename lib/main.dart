@@ -2,14 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:newsapp2/UI/HomePage.dart';
 import 'package:newsapp2/UI/logIn_page.dart';
 import 'package:newsapp2/UI/message/messaging_widget.dart';
 import 'package:newsapp2/UI/theme/theme_bloc/theme_bloc.dart';
 import 'package:newsapp2/UI/theme/theme_bloc/theme_state.dart';
 import 'package:newsapp2/services/api_services.dart';
 import 'package:newsapp2/services/news_bloc/news_bloc.dart';
-import 'package:newsapp2/services/news_bloc/news_event.dart';
 import 'package:newsapp2/services/news_bloc/news_state.dart';
 import 'package:newsapp2/generated/l10n.dart';
 

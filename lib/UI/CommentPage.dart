@@ -1,18 +1,21 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: must_be_immutable
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:newsapp2/UI/web_view.dart';
 import 'package:newsapp2/services/firebase_comment/add_comment.dart';
 import 'package:newsapp2/services/firebase_comment/comment_models.dart';
-import 'package:newsapp2/services/firebase_comment/firebase_comment.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert'; //
 import 'package:share/share.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class CommentPage extends StatefulWidget {
   String urltoImage;
   String title;
+  // ignore: non_constant_identifier_names
   String user_name;
   String url;
 
@@ -26,6 +29,8 @@ class _CommentPageState extends State<CommentPage> {
   AddComment _addComment = AddComment();
   TextEditingController commentController = TextEditingController();
   var refComment = FirebaseDatabase.instance.reference().child('Comment');
+  Completer<WebViewController> webViewController =
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +63,14 @@ class _CommentPageState extends State<CommentPage> {
             placeholder: AssetImage('assets/images/no.png'),
           ),
           Text(widget.title),
+          TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => WebViewPage(widget.url)));
+              },
+              child: Text('Detaylar için lütfen tıklayın...')),
           StreamBuilder<Event>(
               stream: refComment.onValue,
               builder: (context, event) {
